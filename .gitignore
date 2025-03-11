@@ -1,0 +1,22 @@
+# Compiled Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+*.out
+*.app
+
+# VSCode
+.vscode/
+.vs/
+
+# CLion
+.idea/
+cmake-build-*/
+
+# Build directories
+build/
+out/
+Debug/
+Release/
