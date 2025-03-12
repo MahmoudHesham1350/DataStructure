@@ -28,7 +28,7 @@ This assignment consists of five problems focusing on different **data structure
 A system to **manage guest invitations** using **OOP principles**:  
 ✅ `Guest` class to store invitee details  
 ✅ `IftarManager` class to handle multiple invitations  
-✅ Functions to **add, update, and display** guests  
+✅ Functions to **add** guests, **display** all guests, **update** a guest's invitation, and **send** reminders to all the guests
 ✅ Sorting guests by **invitation date**  
 
 ### 2️⃣ Polynomial Operations Using Pointers  
