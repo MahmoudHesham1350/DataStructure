@@ -1,14 +1,6 @@
 #include <iostream>
 using namespace std;
-/*A polynomial object that contains an array that saves its coefficients, an int array implemented suing pointers
- Attributes:
- Polynomial order-> determines the max # of coefficients
- int array-> contains its coefficients
- Methods:
- Display-> outputs each coefficient * its corresponding power of x (the x term vanishes if the coefficient's order is 0)
- Calculate sum-> takes another polynomial as an input, creates a result poly., adds the coefficients, and then returns the result
- Calculate differnce-> same idea
- */
+
 class Polynomial
 {
     int order;
