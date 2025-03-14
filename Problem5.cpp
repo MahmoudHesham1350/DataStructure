@@ -10,7 +10,7 @@ public:
     statisticaCalc(int size);
     ~statisticaCalc();
 
-    void srt();
+    void sort();
     T findMedian();
     T findMin();
     T findMax();
@@ -34,7 +34,8 @@ statisticaCalc<T>::~statisticaCalc(){
 }
 
 template <typename T>
-void statisticaCalc<T>::srt(){
+void statisticaCalc<T>::sort(){
+//    Insertion Sort
     for(int i = 1, j; i < size; i++)
     {
         T tmp = data[i];
@@ -46,7 +47,6 @@ void statisticaCalc<T>::srt(){
 
 template <typename T>
 T statisticaCalc<T>::findMedian(){
-    srt();
     if(size % 2 == 0){
         return (data[size/2 - 1] + data[size/2]) / 2;
     }
@@ -55,19 +55,16 @@ T statisticaCalc<T>::findMedian(){
 
 template <typename T>
 T statisticaCalc<T>::findMin(){
-    srt();
     return data[0];
 }
 
 template <typename T>
 T statisticaCalc<T>::findMax(){
-    srt();
     return data[size - 1];
 }
 
 template <typename T>
 double statisticaCalc<T>::findMean(){
-    srt();
     double sum = 0;
     for(int i = 0; i < size; i++){
         sum += data[i];
@@ -77,7 +74,6 @@ double statisticaCalc<T>::findMean(){
 
 template <typename T>
 T statisticaCalc<T>::findSum(){
-    srt();
     T sum = 0;
     for(int i = 0; i < size; i++){
         sum += data[i];
@@ -87,7 +83,6 @@ T statisticaCalc<T>::findSum(){
 
 template <typename T>
 void statisticaCalc<T>::displayArray(){
-    srt();
     for(int i = 0; i < size; i++){
         cout << data[i] << " ";
     }
@@ -101,6 +96,7 @@ void statisticaCalc<T>::inputData(){
         cout << "Enter data " << i + 1 << ": ";
         cin >> data[i];
     }
+    sort();
 }
 
 template <typename T>
