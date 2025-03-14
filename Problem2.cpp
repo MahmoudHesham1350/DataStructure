@@ -13,14 +13,13 @@ class Polynomial
 {
     int order;
     int* coefficients;
+    int firstNONzero;
+    int lastNONzero;
 public:
-    string display()
+    void findFirstAndLastNONzero()
     {
-        string result = "";
-
-        int firstNONzero = -1;
-        int lastNONzero = -1;
-        //find the index of the first and last non-zero elements
+        firstNONzero = -1;
+        lastNONzero = -1;
         for(int i=1; i<=order+1;i++)
         {
             if(coefficients[i] != 0)
@@ -30,6 +29,12 @@ public:
                 lastNONzero = i;
             }
         }
+    }
+    string display()
+    {
+        //find the index of the first and last non-zero elements
+        findFirstAndLastNONzero();
+        string result = "";
         //process all the terms in the polynomial, starting from the highest order term to the first constant term
         for(int i=order+1; i>=1;i--)
         {
@@ -184,7 +189,7 @@ int main()
     cout<<"Order of second polynomial: "; cin>>secondOrder;
     Polynomial p2(secondOrder);
     cout<<"Enter polynomial: ";
-    for(int i=0; i<firstOrder+2; i++)
+    for(int i=0; i<secondOrder+2; i++)
     {
         cin>>coeff;
         p2.setCoefficient(coeff, i);
