@@ -15,7 +15,6 @@ class Polynomial
     int* coefficients;
     int firstNONzero;
     int lastNONzero;
-public:
     void findFirstAndLastNONzero()
     {
         firstNONzero = -1;
@@ -30,6 +29,8 @@ public:
             }
         }
     }
+public:
+
     string display()
     {
         //find the index of the first and last non-zero elements
