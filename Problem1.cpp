@@ -84,6 +84,25 @@ class IftarManager {
         cout << "-> he is not a guest!! <-\n";
     }
     //-------------------
+    void display_guest(string name){
+        Guest *temp = head;
+        bool found = false;
+        while(temp != NULL){
+            if(temp->name == name){
+                found = true;
+                break;
+            }
+            temp = temp->next;
+        }
+        if(found){
+            cout << "Guest name : " << temp->name;
+            cout << "\nGuest contact : " << temp->contact;
+            cout << "\nGuest iftar date : " << temp->Iftar_date << "\n";
+        }
+        else
+            cout << "-> he is not a guest!! <-\n";
+    }
+    //-------------------
     void send_reminder(string Date){
         cout << "Sending reminders...\n";
         Guest *temp = head;
@@ -196,20 +215,79 @@ void pass(string line, IftarManager& manager){
     manager.add_guest(name, contact, iftarDate);
 }
 
-int main() {
-    IftarManager manager;
-    ifstream inFile("Problem1_testcases.txt");
-    string line;
+void menu(IftarManager& manager){
+    cout << "What do you want to do?" << endl;
+    short choice = 1;
+    while(choice != 0){
+        cout << "\n1) Add a new guest\n2) Update guest\n3) Display guest\n";
+        cout << "4) Display all guests\n5) Sort guest list\n6) Send reminder\n0) Exit\n--> ";
+        cin >> choice;
+        while(choice < 0 || choice > 6){
+            cout << "Wrong operation number!" << endl;
+            cout << "Please insert valid number.\n--> ";
+            cin >> choice;
+        }
+        string info = "";
+        string name, contact, iftarDate;
+        switch (choice)
+        {
+        case 1:
+            cout << "Put guest name : \n--> ";
+            cin >> name;
+            cout << "Put guest contact : \n--> ";
+            cin >> contact;
+            cout << "Put guest iftar date : \n--> ";
+            cin >> iftarDate;
+            manager.add_guest(name, contact, iftarDate);
+            break;
+            case 2:
+            cout << "Put guest name : \n--> ";
+            cin >> name;
+            cout << "Put guest new date : \n--> ";
+            cin >> iftarDate;
+            manager.update_guest_invitation(name,iftarDate);
+            break;
+            case 3:
+            cout << "Put guest name : \n--> ";
+            cin >> name;
+            manager.display_guest(name);
+            break;
+            case 4:
+            manager.display_all_guests();
+            break;
+            case 5:
+            manager.sort_guest_list();
+            break;
+        case 6:
+            cout << "Put iftar date : \n--> ";
+            cin >> iftarDate;
+            manager.send_reminder(iftarDate);
+            break;
+        default:
+            break;
+        }
+    }
+}
 
+int main() {
+    string fileName = "";
+    IftarManager manager;
+    
+    cout << "Insert file name with extension .txt : \n--> ";
+    cin >> fileName;
+    ifstream inFile(fileName);
+    string line;
     if (inFile.is_open()) {
         while (getline(inFile, line)) { 
             pass(line, manager);
         }
+        cout << "\nDone reading file :)\n";
         inFile.close();
     }
-    manager.display_all_guests();
-    cout << "------------------------------------------------------------------\n";
-    manager.sort_guest_list();
-    manager.display_all_guests();
+    else {
+        cout << "Wrong file name : " << fileName << "\nTry again at another time :)\n";
+        return 0;
+    }
+    menu(manager);
 }
 
