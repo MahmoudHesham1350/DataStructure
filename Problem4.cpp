@@ -164,3 +164,87 @@ void SortingSystem<T>::bubbleSort() {
     }
 }
 
+
+template <typename T>
+void SortingSystem<T>::shellSort() {
+    int i, j, gab; 
+    T temp; 
+    for(gab = size / n; gab >= 1; gab /= 2)
+    {
+        for(i = gab; i < n; i++)
+        {
+            temp = data[i]; 
+            for(j = i; j >= gab && data[j-gab] > temp; j -= gab)
+            {
+                data[j] = data[j-gab]; 
+            }
+            data[j] = temp; 
+        }
+    }
+}
+
+
+
+
+template <typename T>
+void SortingSystem<T>::mergeSort(int left, int right) {
+    if(left >= right)
+        return; 
+    int middle = (left + right) / 2; 
+    mergeSort(left, middle); 
+    mergeSort(middle+1, right); 
+    merge(left, middle, right); 
+}
+
+
+
+
+template <typename T>
+void SortingSystem<T>::merge(int left, int middle, int right) {
+    T* sorted = new T[right-left+1]; 
+    int index = 0; 
+    int i = left, j = middle+1; 
+    while(i <= middle && j <= right)
+    {
+        if(data[i] > data[j])
+        {
+            sorted[index] = data[j]; 
+            j++; 
+        }
+        else 
+        {
+            sorted[index] = data[i]; 
+            i++; 
+        }
+        index++; 
+    }
+    if(i <= middle)
+    {
+        for(;i <= middle; i++, index++)
+            sorted[index] = data[i]; 
+    }
+    if(j <= right)
+    {
+        for(;j <= right; j++, index++)
+            sorted[index] = data[j]; 
+    }
+    index = left; 
+    for(int k = 0; k < right-left+1; k++, index++)
+        data[index] = sorted[k]; 
+
+    delete[] sorted; 
+}
+
+
+
+template <typename T>
+void SortingSystem<T>::quickSort(int left, int right) {
+    
+}
+
+
+
+template <typename T>
+int SortingSystem<T>::partition(int low, int high) {
+    
+}
