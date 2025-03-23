@@ -36,12 +36,16 @@ statisticaCalc<T>::~statisticaCalc(){
 template <typename T>
 void statisticaCalc<T>::sort(){
 //    Insertion Sort
-    for(int i = 1, j; i < size; i++)
+    for(int i = 1; i< size; i++)
     {
         T tmp = data[i];
-        for(j = i; j >0 && tmp<data[j-1];j--)
-            data[j] = data[j-1];
-        data[j] = tmp;
+        int j = i-1;
+        while(j >= 0 && data[j] > tmp)
+        {
+            data[j+1] = data[j];
+            j--;
+        }
+        data[j+1] = tmp;
     }
 }
 
