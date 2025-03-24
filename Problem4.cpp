@@ -1,5 +1,8 @@
 #include <iostream>
+#include <chrono>
+#include <random>
 using namespace std;
+using namespace chrono; 
 
 template <typename T>
 class SortingSystem {
@@ -24,6 +27,9 @@ public:
     void merge(int left, int mid, int right); // Merge Sort Helper
     int partition(int low, int high); // Quick Sort Helper
 
+    void mergeSortWrapper();
+    void quickSortWrapper();
+
     void displayData();  // Print the current state of the array    // Done 
     void measureSortTime(void (SortingSystem::*sortFunc)()); // Measure sorting time
 
@@ -33,8 +39,8 @@ public:
 
 template <typename T> 
 SortingSystem<T>::SortingSystem(int n) {
-    this.size = n; 
-    this.data = new T[n];
+    size = n; 
+    data = new T[n];
 }
 
 template <typename T> 
@@ -51,9 +57,20 @@ void SortingSystem<T>::displayData() {
     cout << "===============================" << endl;
 }
 
+
+template <typename T>
+void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
+{
+    auto startTime = high_resolution_clock::now(); 
+    (this->*sortFunc)(); 
+    auto endTime = high_resolution_clock::now(); 
+    duration<double> duration = endTime - startTime; 
+    cout << "The sorting time was : " << duration.count() << " Seconds." << endl; 
+}
+
 template <typename T>
 void SortingSystem<T>::showMenu() {
-    cout << "please enter tha data that you want to sort" << endl;
+    cout << "now please enter tha data that you want to sort" << endl;
     for(int i = 0; i < size; i++) {
         cin >> data[i];
     }
@@ -78,39 +95,40 @@ void SortingSystem<T>::showMenu() {
             insertionSort();
             measureSortTime(&SortingSystem::insertionSort);
             break;
-        case 2:
+            case 2:
             selectionSort();
             measureSortTime(&SortingSystem::selectionSort);
             break;
-        case 3:
+            case 3:
             bubbleSort();
             measureSortTime(&SortingSystem::bubbleSort);
             break;
-        case 4:
+            case 4:
             shellSort();
             measureSortTime(&SortingSystem::shellSort);
             break;
-        case 5:
+            case 5:
             mergeSort(0, size - 1);
-            measureSortTime(&SortingSystem::mergeSort);
+            measureSortTime(&SortingSystem::mergeSortWrapper);
             break;
-        case 6:
+            case 6:
             quickSort(0, size - 1);
-            measureSortTime(&SortingSystem::quickSort);
+            measureSortTime(&SortingSystem::quickSortWrapper);
             break;
-        case 7:
+            case 7:
             countSort();
             measureSortTime(&SortingSystem::countSort);
             break;
-        case 8:
+            case 8:
             radixSort();
             measureSortTime(&SortingSystem::radixSort);
             break;
-        case 9:
+            case 9:
             bucketSort();
             measureSortTime(&SortingSystem::bucketSort);
             break;
     }
+    displayData(); 
 }
 
 
@@ -125,7 +143,7 @@ void SortingSystem<T>::insertionSort() {
         {
             data[j] = data[j-1]; 
         }
-        data[j] = temp
+        data[j] = temp;
     }
 }
 
@@ -134,11 +152,11 @@ template <typename T>
 void SortingSystem<T>::selectionSort() {
     T minValue; 
     int i, j, minIndex; 
-    for(i = 0; i < n-1; i++)
+    for(i = 0; i < size-1; i++)
     {
         minValue = data[i]; 
         minIndex = i; 
-        for(j = i+1; j < n; j++)
+        for(j = i+1; j < size; j++)
         {
             if(data[j] < minValue)
             {
@@ -154,7 +172,7 @@ void SortingSystem<T>::selectionSort() {
 
 template <typename T>
 void SortingSystem<T>::bubbleSort() {
-    for(int i = n-1; i >= 0; i--)
+    for(int i = size-1; i >= 0; i--)
     {
         for(int j = 0; j < i; j++)
         {
@@ -169,9 +187,9 @@ template <typename T>
 void SortingSystem<T>::shellSort() {
     int i, j, gab; 
     T temp; 
-    for(gab = size / n; gab >= 1; gab /= 2)
+    for(gab = size / 2; gab >= 1; gab /= 2)
     {
-        for(i = gab; i < n; i++)
+        for(i = gab; i < size; i++)
         {
             temp = data[i]; 
             for(j = i; j >= gab && data[j-gab] > temp; j -= gab)
@@ -196,6 +214,11 @@ void SortingSystem<T>::mergeSort(int left, int right) {
     merge(left, middle, right); 
 }
 
+
+template <typename T>
+void SortingSystem<T>::mergeSortWrapper() {
+    mergeSort(0, size - 1);
+}
 
 
 
@@ -239,12 +262,110 @@ void SortingSystem<T>::merge(int left, int middle, int right) {
 
 template <typename T>
 void SortingSystem<T>::quickSort(int left, int right) {
-    
+    if(left >= right)
+        return; 
+    int middle = partition(left, right); 
+    quickSort(left, middle-1); 
+    quickSort(middle+1, right); 
+}
+
+
+template <typename T>
+void SortingSystem<T>::quickSortWrapper() {
+    quickSort(0, size - 1);
+}
+
+
+template <typename T>
+int SortingSystem<T>::partition(int low, int high) {
+    // generating a random pivot as a best practice 
+    random_device rd;  
+    mt19937 gen(rd()); 
+    uniform_int_distribution<int> dist(low, high); 
+    int pivotIndex = dist(gen);
+    swap(data[low], data[pivotIndex]); 
+    //main code 
+    int i = low, j; 
+    T pivot = data[low];
+    for(j = i+1; j <= high; j++)
+    {
+        if(data[j] < pivot)
+        {
+            i++; 
+            swap(data[i],data[j]); 
+        }
+    } 
+    swap(data[i], data[low]); 
+    return i; 
 }
 
 
 
 template <typename T>
-int SortingSystem<T>::partition(int low, int high) {
+void SortingSystem<T>::countSort() {
     
+}
+template <typename T>
+void SortingSystem<T>::radixSort() {
+
+}
+template <typename T>
+void SortingSystem<T>::bucketSort() {
+
+}
+
+
+
+
+int main()
+{
+    cout << "welcome ya user, how are you doing ?" << endl;
+    cout << "i hope you're doing well. at first, allow me to welcome you in this Sorting System" << endl; 
+    cout << "what is the type of the data you want to sort ?" << endl; 
+    cout << "1-int" << endl; 
+    cout << "2-float" << endl; 
+    cout << "3-character" << endl; 
+    cout << "4-string" << endl; 
+    cout << "please enter you choice : "; 
+    int dataType; 
+    cin >> dataType; 
+    while (!(dataType > 0 && dataType < 5) || cin.fail()) 
+    {
+        cin.ignore(); 
+        cout << "Invalid input!!!" << endl; 
+        cout << "please enter a valid number from the choices : "; 
+        cin >> dataType; 
+    } 
+
+    cout << "now let me know, what is the size of the data you want to sort ? how many elemnts ? : "; 
+    int dataSize; 
+    cin >> dataSize; 
+    while (dataSize <= 0 || cin.fail()) 
+    {
+        cin.ignore(); 
+        cout << "Invalid input!!!" << endl; 
+        cout << "please enter a valid postive size"; 
+        cin >> dataSize; 
+    } 
+    if(dataType == 1)
+    {
+        SortingSystem<int> intSorting(dataSize); 
+        intSorting.showMenu(); 
+    }
+    if(dataType == 2)
+    {
+        SortingSystem<float> floatSorting(dataSize); 
+        floatSorting.showMenu(); 
+    }
+    if(dataType == 3)
+    {
+        SortingSystem<char> charSorting(dataSize); 
+        charSorting.showMenu(); 
+    }
+    if(dataType == 4)
+    {
+        SortingSystem<string> stringSorting(dataSize); 
+        stringSorting.showMenu(); 
+    }
+    return 0; 
 }
