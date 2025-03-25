@@ -18,7 +18,7 @@ public:
     T findSum();
 
     void displayArray();
-    void inputData();
+    void inputData(ifstream &file);
     void statisticsMenu();
 };
 
@@ -95,10 +95,12 @@ void statisticaCalc<T>::displayArray(){
 
 
 template <typename T>
-void statisticaCalc<T>::inputData(){
+void statisticaCalc<T>::inputData(ifstream &file){
     for(int i = 0; i < size; i++){
-        cout << "Enter data " << i + 1 << ": ";
-        cin >> data[i];
+        if (!(file >> data[i])) {
+            cerr << "Error reading data from file!" << endl;
+            exit(1);
+        }
     }
     sort();
 }
@@ -147,28 +149,39 @@ void statisticaCalc<T>::statisticsMenu(){
 int main()
 {
     int size, typeChoice;
+    string filename;
+
+    cout << "Enter filename: ";
+    cin >> filename;
+    ifstream file(filename);
+    if (!file) {
+        cerr << "Error opening file!" << endl;
+        return 1;
+    }
+
+    cout << "Enter size of data: ";
+    cin >> size;
+
     cout << "Select data type:\n"
             "1. Integer\n"
             "2. Double\n"
             "Enter choice: ";
     cin >> typeChoice;
 
-    cout << "Enter size of data: ";
-    cin >> size;
-
     if(typeChoice == 1){
         statisticaCalc<int> sc(size);
-        sc.inputData();
+        sc.inputData(file);
         sc.statisticsMenu();
     }
     else if(typeChoice == 2){
         statisticaCalc<double> sc(size);
-        sc.inputData();
+        sc.inputData(file);
         sc.statisticsMenu();
     }
     else {
         cout << "Invalid data type selection!" << endl;
     }
 
+    file.close();
     return 0;
 }
