@@ -54,7 +54,7 @@ void SortingSystem<T>::displayData() {
     for(int i = 0; i < size; i++) {
         cout << data[i] << " "; 
     }
-    cout << "===============================" << endl;
+    cout << endl <<"===============================" << endl;
 }
 
 
@@ -70,11 +70,11 @@ void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
 
 template <typename T>
 void SortingSystem<T>::showMenu() {
-    cout << "now please enter tha data that you want to sort" << endl;
+    cout << "now please enter tha data that you want to sort : ";
     for(int i = 0; i < size; i++) {
         cin >> data[i];
     }
-    cout << "now please enter the number of the sorting algorithm you want to use" << endl;
+    cout << "please enter the number of the sorting algorithm you want to use" << endl;
     cout << "1) Insertion Sort" << endl;
     cout << "2) Selection Sort" << endl;
     cout << "3) Bubble Sort" << endl;
@@ -92,39 +92,39 @@ void SortingSystem<T>::showMenu() {
     }
     switch (choice) {
         case 1:
-            insertionSort();
+            // insertionSort();
             measureSortTime(&SortingSystem::insertionSort);
             break;
-            case 2:
-            selectionSort();
+        case 2:
+            // selectionSort();
             measureSortTime(&SortingSystem::selectionSort);
             break;
-            case 3:
-            bubbleSort();
+        case 3:
+            // bubbleSort();
             measureSortTime(&SortingSystem::bubbleSort);
             break;
-            case 4:
-            shellSort();
+        case 4:
+            // shellSort();
             measureSortTime(&SortingSystem::shellSort);
             break;
-            case 5:
-            mergeSort(0, size - 1);
+        case 5:
+            // mergeSort(0, size - 1);
             measureSortTime(&SortingSystem::mergeSortWrapper);
             break;
-            case 6:
-            quickSort(0, size - 1);
+        case 6:
+            // quickSort(0, size - 1);
             measureSortTime(&SortingSystem::quickSortWrapper);
             break;
-            case 7:
-            countSort();
+        case 7:
+            // countSort();
             measureSortTime(&SortingSystem::countSort);
             break;
-            case 8:
-            radixSort();
+        case 8:
+            // radixSort();
             measureSortTime(&SortingSystem::radixSort);
             break;
-            case 9:
-            bucketSort();
+        case 9:
+            // bucketSort();
             measureSortTime(&SortingSystem::bucketSort);
             break;
     }
@@ -136,10 +136,10 @@ template <typename T>
 void SortingSystem<T>::insertionSort() {
     T temp; 
     int i, j;
-    for(i = 0; i < size; i++) 
+    for(i = 1; i < size; i++) 
     {
         temp = data[i]; 
-        for(j = i; j > 0 && data[i] < data[j]; j--) //data[j-1]*
+        for(j = i; j > 0 && data[j-1] > temp; j--) //data[j-1]*
         {
             data[j] = data[j-1]; 
         }
@@ -321,51 +321,72 @@ int main()
 {
     cout << "welcome ya user, how are you doing ?" << endl;
     cout << "i hope you're doing well. at first, allow me to welcome you in this Sorting System" << endl; 
-    cout << "what is the type of the data you want to sort ?" << endl; 
-    cout << "1-int" << endl; 
-    cout << "2-float" << endl; 
-    cout << "3-character" << endl; 
-    cout << "4-string" << endl; 
-    cout << "please enter you choice : "; 
-    int dataType; 
-    cin >> dataType; 
-    while (!(dataType > 0 && dataType < 5) || cin.fail()) 
+    while(true)
     {
-        cin.ignore(); 
-        cout << "Invalid input!!!" << endl; 
-        cout << "please enter a valid number from the choices : "; 
+        cout << "what do you want to do ?" << endl; 
+        cout << "1-sort some elments" << endl; 
+        cout << "2-Exit program" << endl; 
+        cout << "enter your choice : "; 
+        int exitChoice; 
+        cin >> exitChoice; 
+        while(exitChoice < 1 || exitChoice > 2 || cin.fail())
+        {
+            cin.ignore(); 
+            cout << "please Enter a Valid input!!!\n what's your choice ? :"; 
+            cin >> exitChoice;
+        }
+        bool exit = (exitChoice == 2); 
+        if(exit)
+        {
+            cout << "thx for using the program :)"; 
+            break;
+        }
+        cout << "what is the type of the data you want to sort ?" << endl; 
+        cout << "1-int" << endl; 
+        cout << "2-float" << endl; 
+        cout << "3-character" << endl; 
+        cout << "4-string" << endl; 
+        cout << "please enter you choice : "; 
+        int dataType; 
         cin >> dataType; 
-    } 
+        while (!(dataType > 0 && dataType < 5) || cin.fail()) 
+        {
+            cin.ignore(); 
+            cout << "Invalid input!!!" << endl; 
+            cout << "please enter a valid number from the choices : "; 
+            cin >> dataType; 
+        } 
 
-    cout << "now let me know, what is the size of the data you want to sort ? how many elemnts ? : "; 
-    int dataSize; 
-    cin >> dataSize; 
-    while (dataSize <= 0 || cin.fail()) 
-    {
-        cin.ignore(); 
-        cout << "Invalid input!!!" << endl; 
-        cout << "please enter a valid postive size"; 
+        cout << "now let me know, what is the size of the data you want to sort ? how many elemnts ? : "; 
+        int dataSize; 
         cin >> dataSize; 
-    } 
-    if(dataType == 1)
-    {
-        SortingSystem<int> intSorting(dataSize); 
-        intSorting.showMenu(); 
-    }
-    if(dataType == 2)
-    {
-        SortingSystem<float> floatSorting(dataSize); 
-        floatSorting.showMenu(); 
-    }
-    if(dataType == 3)
-    {
-        SortingSystem<char> charSorting(dataSize); 
-        charSorting.showMenu(); 
-    }
-    if(dataType == 4)
-    {
-        SortingSystem<string> stringSorting(dataSize); 
-        stringSorting.showMenu(); 
+        while (dataSize <= 0 || cin.fail()) 
+        {
+            cin.ignore(); 
+            cout << "Invalid input!!!" << endl; 
+            cout << "please enter a valid postive size"; 
+            cin >> dataSize; 
+        } 
+        if(dataType == 1)
+        {
+            SortingSystem<int> intSorting(dataSize); 
+            intSorting.showMenu(); 
+        }
+        if(dataType == 2)
+        {
+            SortingSystem<float> floatSorting(dataSize); 
+            floatSorting.showMenu(); 
+        }
+        if(dataType == 3)
+        {
+            SortingSystem<char> charSorting(dataSize); 
+            charSorting.showMenu(); 
+        }
+        if(dataType == 4)
+        {
+            SortingSystem<string> stringSorting(dataSize); 
+            stringSorting.showMenu(); 
+        }
     }
     return 0; 
 }
