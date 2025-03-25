@@ -286,9 +286,8 @@ void SortingSystem<T>::bucketSort() {
         if constexpr (is_same<T, int>::value || is_same<T, float>::value || is_same<T, double>::value) {
             bucketIndex = static_cast<int>((data[i] * 10) / (maxValue + 1));
         } else if constexpr (is_same<T, char>::value) {
-            bucketIndex = static_cast<int>(data[i]) % 10; // 256 possible char values
+            bucketIndex = static_cast<int>(data[i]) % 10;
         } else if constexpr (is_same<T, string>::value) {
-            // For strings, use the first character as a simple hashing mechanism
             bucketIndex = data[i].empty() ? 0 : (data[i][0] % 10);
         }
         buckets[bucketIndex][CountBucket[bucketIndex]++] = data[i];
