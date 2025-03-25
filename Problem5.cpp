@@ -11,7 +11,7 @@ public:
     ~statisticaCalc();
 
     void sort();
-    T findMedian();
+    double findMedian();
     T findMin();
     T findMax();
     double findMean();
@@ -50,11 +50,11 @@ void statisticaCalc<T>::sort(){
 }
 
 template <typename T>
-T statisticaCalc<T>::findMedian(){
+double statisticaCalc<T>::findMedian(){
     if(size % 2 == 0){
-        return (data[size/2 - 1] + data[size/2]) / 2;
+        return (static_cast<double>(data[size/2 - 1]) + static_cast<double>(data[size/2])) / 2.0;
     }
-    return data[size/2];
+    return static_cast<double>(data[size/2]);
 }
 
 template <typename T>
@@ -105,16 +105,15 @@ void statisticaCalc<T>::inputData(){
 
 template <typename T>
 void statisticaCalc<T>::statisticsMenu(){
-
     int choice;
     do{
-        cout << "\n1. Find Median" << endl;
-        cout << "2. Find Min" << endl;
-        cout << "3. Find Max" << endl;
-        cout << "4. Find Mean" << endl;
-        cout << "5. Find Sum" << endl;
-        cout << "6. Display Array" << endl;
-        cout << "7. Exit" << endl;
+        cout << "\n1-> Find Median" << endl;
+        cout << "2-> Find Min" << endl;
+        cout << "3-> Find Max" << endl;
+        cout << "4-> Find Mean" << endl;
+        cout << "5-> Find Sum" << endl;
+        cout << "6-> Display Array" << endl;
+        cout << "7-> Exit" << endl;
         cout << "Enter choice: ";
         cin >> choice;
         switch(choice){
@@ -147,11 +146,29 @@ void statisticaCalc<T>::statisticsMenu(){
 
 int main()
 {
-    int size;
+    int size, typeChoice;
+    cout << "Select data type:\n"
+            "1. Integer\n"
+            "2. Double\n"
+            "Enter choice: ";
+    cin >> typeChoice;
+
     cout << "Enter size of data: ";
     cin >> size;
-    statisticaCalc<int> sc(size);
-    sc.inputData();
-    sc.statisticsMenu();
+
+    if(typeChoice == 1){
+        statisticaCalc<int> sc(size);
+        sc.inputData();
+        sc.statisticsMenu();
+    }
+    else if(typeChoice == 2){
+        statisticaCalc<double> sc(size);
+        sc.inputData();
+        sc.statisticsMenu();
+    }
+    else {
+        cout << "Invalid data type selection!" << endl;
+    }
+
     return 0;
 }
