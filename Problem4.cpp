@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <random>
+#include <algorithm>
 using namespace std;
 using namespace chrono; 
 
@@ -36,7 +37,6 @@ public:
     void showMenu(); // Display menu for user interaction   // nearly Done
 };
 
-
 template <typename T> 
 SortingSystem<T>::SortingSystem(int n) {
     size = n; 
@@ -48,15 +48,15 @@ SortingSystem<T>::~SortingSystem() {
     delete[] data;
 }
 
-
 template <typename T> 
 void SortingSystem<T>::displayData() {
+    cout << "===============================" << endl;
+    cout << "sorted data: ";
     for(int i = 0; i < size; i++) {
         cout << data[i] << " "; 
     }
-    cout << "===============================" << endl;
-}
 
+}
 
 template <typename T>
 void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
@@ -91,46 +91,18 @@ void SortingSystem<T>::showMenu() {
         cin >> choice;
     }
     switch (choice) {
-        case 1:
-            insertionSort();
-            measureSortTime(&SortingSystem::insertionSort);
-            break;
-            case 2:
-            selectionSort();
-            measureSortTime(&SortingSystem::selectionSort);
-            break;
-            case 3:
-            bubbleSort();
-            measureSortTime(&SortingSystem::bubbleSort);
-            break;
-            case 4:
-            shellSort();
-            measureSortTime(&SortingSystem::shellSort);
-            break;
-            case 5:
-            mergeSort(0, size - 1);
-            measureSortTime(&SortingSystem::mergeSortWrapper);
-            break;
-            case 6:
-            quickSort(0, size - 1);
-            measureSortTime(&SortingSystem::quickSortWrapper);
-            break;
-            case 7:
-            countSort();
-            measureSortTime(&SortingSystem::countSort);
-            break;
-            case 8:
-            radixSort();
-            measureSortTime(&SortingSystem::radixSort);
-            break;
-            case 9:
-            bucketSort();
-            measureSortTime(&SortingSystem::bucketSort);
-            break;
+        case 1: measureSortTime(&SortingSystem::insertionSort); break;
+        case 2: measureSortTime(&SortingSystem::selectionSort); break;
+        case 3: measureSortTime(&SortingSystem::bubbleSort); break;
+        case 4: measureSortTime(&SortingSystem::shellSort); break;
+        case 5: measureSortTime(&SortingSystem::mergeSortWrapper); break;
+        case 6: measureSortTime(&SortingSystem::quickSortWrapper); break;
+        case 7: measureSortTime(&SortingSystem::countSort); break;
+        case 8: measureSortTime(&SortingSystem::radixSort); break;
+        case 9: measureSortTime(&SortingSystem::bucketSort); break;
     }
     displayData(); 
 }
-
 
 template <typename T>
 void SortingSystem<T>::insertionSort() {
@@ -146,7 +118,6 @@ void SortingSystem<T>::insertionSort() {
         data[j] = temp;
     }
 }
-
 
 template <typename T>
 void SortingSystem<T>::selectionSort() {
@@ -169,7 +140,6 @@ void SortingSystem<T>::selectionSort() {
     }
 }
 
-
 template <typename T>
 void SortingSystem<T>::bubbleSort() {
     for(int i = size-1; i >= 0; i--)
@@ -181,7 +151,6 @@ void SortingSystem<T>::bubbleSort() {
         }
     }
 }
-
 
 template <typename T>
 void SortingSystem<T>::shellSort() {
@@ -201,9 +170,6 @@ void SortingSystem<T>::shellSort() {
     }
 }
 
-
-
-
 template <typename T>
 void SortingSystem<T>::mergeSort(int left, int right) {
     if(left >= right)
@@ -214,13 +180,10 @@ void SortingSystem<T>::mergeSort(int left, int right) {
     merge(left, middle, right); 
 }
 
-
 template <typename T>
 void SortingSystem<T>::mergeSortWrapper() {
     mergeSort(0, size - 1);
 }
-
-
 
 template <typename T>
 void SortingSystem<T>::merge(int left, int middle, int right) {
@@ -258,8 +221,6 @@ void SortingSystem<T>::merge(int left, int middle, int right) {
     delete[] sorted; 
 }
 
-
-
 template <typename T>
 void SortingSystem<T>::quickSort(int left, int right) {
     if(left >= right)
@@ -269,12 +230,10 @@ void SortingSystem<T>::quickSort(int left, int right) {
     quickSort(middle+1, right); 
 }
 
-
 template <typename T>
 void SortingSystem<T>::quickSortWrapper() {
     quickSort(0, size - 1);
 }
-
 
 template <typename T>
 int SortingSystem<T>::partition(int low, int high) {
@@ -299,18 +258,67 @@ int SortingSystem<T>::partition(int low, int high) {
     return i; 
 }
 
-
-
 template <typename T>
 void SortingSystem<T>::countSort() {
     
 }
+
 template <typename T>
 void SortingSystem<T>::radixSort() {
 
 }
+
 template <typename T>
 void SortingSystem<T>::bucketSort() {
+    if (this->size <= 0) return;
+
+    T** buckets = new T*[10];
+    for (int i = 0; i < 10; i++) {
+        buckets[i] = new T[this->size];
+    }
+
+    int CountBucket[10] = {0};
+
+    T maxValue = *max_element(data, data + this->size);
+
+    for (int i = 0; i < this->size; i++) {
+    int bucketIndex = 0;
+        if constexpr (is_same<T, int>::value || is_same<T, float>::value || is_same<T, double>::value) {
+            bucketIndex = static_cast<int>((data[i] * 10) / (maxValue + 1));
+        } else if constexpr (is_same<T, char>::value) {
+            bucketIndex = static_cast<int>(data[i]) % 10; // 256 possible char values
+        } else if constexpr (is_same<T, string>::value) {
+            // For strings, use the first character as a simple hashing mechanism
+            bucketIndex = data[i].empty() ? 0 : (data[i][0] % 10);
+        }
+        buckets[bucketIndex][CountBucket[bucketIndex]++] = data[i];
+    }
+
+    delete[] this->data;
+
+    int total_size = this->size;
+    for (int i = 0; i < 10; i++) {
+        if (CountBucket[i] > 0) {
+            this->size = CountBucket[i];
+            this->data = buckets[i];
+            insertionSort();
+        }
+    }
+
+    int index = 0;
+
+    this->data = new T[total_size];
+    this->size = total_size;
+
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < CountBucket[i]; j++) {
+            data[index++] = buckets[i][j];
+        }
+    }
+
+    for (int i = 0; i < 10; i++) {
+        delete[] buckets[i];
+    }
 
 }
 
@@ -319,13 +327,13 @@ void SortingSystem<T>::bucketSort() {
 
 int main()
 {
-    cout << "welcome ya user, how are you doing ?" << endl;
-    cout << "i hope you're doing well. at first, allow me to welcome you in this Sorting System" << endl; 
-    cout << "what is the type of the data you want to sort ?" << endl; 
-    cout << "1-int" << endl; 
-    cout << "2-float" << endl; 
-    cout << "3-character" << endl; 
-    cout << "4-string" << endl; 
+    cout << "Welcome to the Sorting System!" << endl;
+    cout << "This program allows you to sort data using various sorting algorithms." << endl;
+    cout << "Please select the type of data you want to sort:" << endl;
+    cout << "1) int" << endl;
+    cout << "2) float" << endl;
+    cout << "3) character" << endl;
+    cout << "4) string" << endl;
     cout << "please enter you choice : "; 
     int dataType; 
     cin >> dataType; 
