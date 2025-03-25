@@ -50,7 +50,6 @@ SortingSystem<T>::~SortingSystem() {
 
 template <typename T> 
 void SortingSystem<T>::displayData() {
-    cout << "===============================" << endl;
     cout << "sorted data: ";
     for(int i = 0; i < size; i++) {
         cout << data[i] << " "; 
@@ -86,6 +85,7 @@ void SortingSystem<T>::showMenu() {
     cout << "8) Radix Sort" << endl;
     cout << "9) Bucket Sort" << endl;
     int choice;
+    cout << "please enter your choice : "; 
     cin >> choice;
     while (choice < 1 || choice > 9) {
         cout << "please enter a valid choice" << endl;
@@ -101,42 +101,6 @@ void SortingSystem<T>::showMenu() {
         case 7: measureSortTime(&SortingSystem::countSort); break;
         case 8: measureSortTime(&SortingSystem::radixSort); break;
         case 9: measureSortTime(&SortingSystem::bucketSort); break;
-        case 1:
-            // insertionSort();
-            measureSortTime(&SortingSystem::insertionSort);
-            break;
-        case 2:
-            // selectionSort();
-            measureSortTime(&SortingSystem::selectionSort);
-            break;
-        case 3:
-            // bubbleSort();
-            measureSortTime(&SortingSystem::bubbleSort);
-            break;
-        case 4:
-            // shellSort();
-            measureSortTime(&SortingSystem::shellSort);
-            break;
-        case 5:
-            // mergeSort(0, size - 1);
-            measureSortTime(&SortingSystem::mergeSortWrapper);
-            break;
-        case 6:
-            // quickSort(0, size - 1);
-            measureSortTime(&SortingSystem::quickSortWrapper);
-            break;
-        case 7:
-            // countSort();
-            measureSortTime(&SortingSystem::countSort);
-            break;
-        case 8:
-            // radixSort();
-            measureSortTime(&SortingSystem::radixSort);
-            break;
-        case 9:
-            // bucketSort();
-            measureSortTime(&SortingSystem::bucketSort);
-            break;
     }
     displayData(); 
 }
@@ -363,23 +327,6 @@ void SortingSystem<T>::bucketSort() {
 
 int main()
 {
-    cout << "Welcome to the Sorting System!" << endl;
-    cout << "This program allows you to sort data using various sorting algorithms." << endl;
-    cout << "Please select the type of data you want to sort:" << endl;
-    cout << "1) int" << endl;
-    cout << "2) float" << endl;
-    cout << "3) character" << endl;
-    cout << "4) string" << endl;
-    cout << "please enter you choice : "; 
-    int dataType; 
-    cin >> dataType; 
-    while (!(dataType > 0 && dataType < 5) || cin.fail()) 
-    {
-        cin.ignore(); 
-        cout << "Invalid input!!!" << endl; 
-        cout << "please enter a valid number from the choices : "; 
-        cin >> dataType; 
-    } 
     cout << "welcome ya user, how are you doing ?" << endl;
     cout << "i hope you're doing well. at first, allow me to welcome you in this Sorting System" << endl; 
     while(true)
