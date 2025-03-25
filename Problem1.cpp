@@ -32,9 +32,11 @@ class Guest {
 class IftarManager {
     private:
     Guest *head;
+    int no_guests;
     public:
     IftarManager(){
         head = NULL;
+        no_guests = 0;
     }
     //-------------------
     ~IftarManager() {
@@ -45,16 +47,50 @@ class IftarManager {
         }
     }
     //-------------------
+    int get_no_guests(){
+        return this->no_guests;
+    }
+    //-------------------
     void add_guest(string name, string contact, string Iftar_date){
         Guest *newGuest = new Guest(name, contact, Iftar_date);
         if(head == NULL){
             head = newGuest;
             cout << "-> " << name << " Added successfully! <-" << endl;
+            no_guests++;
         }
         else{
             newGuest->next = head;
             head = newGuest;
             cout << "-> " << name << " Added successfully! <-" << endl;
+            no_guests++;
+        }
+    }
+    //-------------------
+    void Remove(string name) {
+        if (head == NULL) {
+            cout << "--> Guest list is empty! <--" << endl;
+            return;
+        }
+        if (head->name == name) {
+            Guest* node = head;
+            head = head->next;
+            cout << "--> " << node->name << " removed successfully <--" << endl;
+            delete node;
+            no_guests--;
+            return;
+        }
+        Guest* temp = head;
+        while (temp->next != NULL && temp->next->name != name) {
+            temp = temp->next;
+        }
+        if (temp->next != NULL) {
+            Guest* node = temp->next;
+            temp->next = temp->next->next;
+            cout << "--> " << node->name << " removed successfully <--" << endl;
+            delete node;
+            no_guests--;
+        } else {
+            cout << "-> " << name << " is not a guest <-\n";
         }
     }
     //-------------------
@@ -185,6 +221,7 @@ class IftarManager {
             curr = head;
         }
         head = sortedHead;
+        cout << "--> Sorted succesfully! <--\n";
     }
 }; 
 
@@ -220,9 +257,10 @@ void menu(IftarManager& manager){
     short choice = 1;
     while(choice != 0){
         cout << "\n1) Add a new guest\n2) Update guest\n3) Display guest\n";
-        cout << "4) Display all guests\n5) Sort guest list\n6) Send reminder\n0) Exit\n--> ";
+        cout << "4) Display all guests\n5) Sort guest list\n6) Send reminder";
+        cout << "\n7) Number of guests\n8) Remove guest\n0) Exit\n--> ";
         cin >> choice;
-        while(choice < 0 || choice > 6){
+        while(choice < 0 || choice > 8){
             cout << "Wrong operation number!" << endl;
             cout << "Please insert valid number.\n--> ";
             cin >> choice;
@@ -240,28 +278,36 @@ void menu(IftarManager& manager){
             cin >> iftarDate;
             manager.add_guest(name, contact, iftarDate);
             break;
-            case 2:
+        case 2:
             cout << "Put guest name : \n--> ";
             cin >> name;
             cout << "Put guest new date : \n--> ";
             cin >> iftarDate;
             manager.update_guest_invitation(name,iftarDate);
             break;
-            case 3:
+        case 3:
             cout << "Put guest name : \n--> ";
             cin >> name;
             manager.display_guest(name);
             break;
-            case 4:
+        case 4:
             manager.display_all_guests();
             break;
-            case 5:
+        case 5:
             manager.sort_guest_list();
             break;
         case 6:
             cout << "Put iftar date : \n--> ";
             cin >> iftarDate;
             manager.send_reminder(iftarDate);
+            break;
+        case 7:
+            cout << "--> Number of guests: " << manager.get_no_guests() << " <--\n";
+            break;
+        case 8:
+            cout << "Put guest name : \n--> ";
+            cin >> name;
+            manager.Remove(name);
             break;
         default:
             break;
@@ -290,4 +336,3 @@ int main() {
     }
     menu(manager);
 }
-
