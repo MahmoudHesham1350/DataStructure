@@ -391,9 +391,12 @@ void SortingSystem<T>::countSort() {
     }
 }
 
-template <>
-void SortingSystem<int>::radixSort()
-{
+template <typename T>
+void SortingSystem<T>::radixSort(){
+    if constexpr (!std::is_same_v<T, int>) {
+        throw std::invalid_argument("Count Sort is only applicable for integer data");
+    }
+    else {
     //get the largest num
     int maxNum = data[0];
     for (int i = 1; i < size; i++)
@@ -436,6 +439,7 @@ void SortingSystem<int>::radixSort()
         }
         delete [] countArray;
         delete [] sortedArray;
+    }
     }
 }
 template <typename T>
