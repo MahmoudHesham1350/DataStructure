@@ -391,11 +391,53 @@ void SortingSystem<T>::countSort() {
     }
 }
 
-template <typename T>
-void SortingSystem<T>::radixSort() {
+template <>
+void SortingSystem<int>::radixSort()
+{
+    //get the largest num
+    int maxNum = data[0];
+    for (int i = 1; i < size; i++)
+    {
+        if (data[i] > maxNum)
+            maxNum = data[i];
+    }
 
+    //We'll find the correct placement of every number in our data by continuously sorting them according to a some decimal place, we'll do this starting from the very first one (unit's), and do it up to the highest decimal place the maximum number has
+    for (int exp = 1; maxNum / exp > 0; exp *= 10)
+    {
+        //count array: the array that should record the # of occurrences of each digit (that's an index in it) in a given decimal place (exp) and we'll use the counting sort
+        int* countArray = new int[10];
+        for(int i=0;i<10;i++)
+        {
+            countArray[i] = 0;
+        }
+
+        for (int i = 0; i < size; i++)
+        {
+            countArray[(data[i] / exp) % 10]++;
+        }
+
+        //We'll convert it to a "cumulative" count array that records the position of a number's first occurrence in the sorted digits array according to its current decimal place
+        for (int i = 1; i < 10; i++)
+        {
+            countArray[i] += countArray[i - 1];
+        }
+        int* sortedArray = new int[size];
+        //We'll sort the numbers in this sorted order in the sorted array according to the correct placement of their current decimal place
+        for (int i = size - 1; i >= 0; i--)
+        {
+            sortedArray[countArray[(data[i] / exp) % 10] - 1] = data[i];
+            countArray[(data[i] / exp) % 10]--;
+        }
+
+        for (int i = 0; i < size; i++)
+        {
+            data[i] = sortedArray[i];
+        }
+        delete [] countArray;
+        delete [] sortedArray;
+    }
 }
-
 template <typename T>
 void SortingSystem<T>::bucketSort() {
     if (this->size <= 0) return;
