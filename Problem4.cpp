@@ -48,14 +48,15 @@ SortingSystem<T>::~SortingSystem() {
     delete[] data;
 }
 
-template <typename T> 
+template <typename T>
 void SortingSystem<T>::displayData() {
-    cout << "sorted data: ";
-    for(int i = 0; i < size; i++) {
-        cout << data[i] << " "; 
+    cout.flush();
+    cout << " [";
+    cout << this->data[0] ;
+    for(int i = 1; i < size; i++) {
+        cout << ", " << this->data[i] ;
     }
-
-    cout << endl <<"===============================" << endl;
+    cout << "]" << endl;
 }
 
 template <typename T>
@@ -91,6 +92,8 @@ void SortingSystem<T>::showMenu() {
         cout << "please enter a valid choice" << endl;
         cin >> choice;
     }
+    cout << "main data is : "; 
+    displayData(); 
     switch (choice) {
         case 1: measureSortTime(&SortingSystem::insertionSort); break;
         case 2: measureSortTime(&SortingSystem::selectionSort); break;
@@ -102,28 +105,41 @@ void SortingSystem<T>::showMenu() {
         case 8: measureSortTime(&SortingSystem::radixSort); break;
         case 9: measureSortTime(&SortingSystem::bucketSort); break;
     }
+    cout << "sorted data : "; 
     displayData(); 
 }
 
 template <typename T>
 void SortingSystem<T>::insertionSort() {
+    cout << "Sorting using insertion Sort..." << endl; 
     T temp; 
     int i, j;
+    int count = 0; 
     for(i = 1; i < size; i++) 
     {
+        bool hasChanged = false; 
         temp = data[i]; 
-        for(j = i; j > 0 && data[j-1] > temp; j--) //data[j-1]*
+        for(j = i; j > 0 && data[j-1] > temp; j--) 
         {
             data[j] = data[j-1]; 
+            hasChanged = true; 
         }
         data[j] = temp;
+        if(hasChanged)
+        {
+            count++; 
+            cout << "iteration " << count << ':'; 
+            displayData(); 
+        }
     }
 }
 
 template <typename T>
 void SortingSystem<T>::selectionSort() {
+    cout << "Sorting using selection Sort..." << endl; 
     T minValue; 
-    int i, j, minIndex; 
+    int i, j, minIndex;
+    int count = 0;  
     for(i = 0; i < size-1; i++)
     {
         minValue = data[i]; 
@@ -137,36 +153,64 @@ void SortingSystem<T>::selectionSort() {
             }
         }
         if(minIndex != i)
+        {
             swap(data[i],data[minIndex]);
+            count++; 
+            cout << "interation " << count << ": "; 
+            displayData(); 
+        }
     }
 }
 
 template <typename T>
 void SortingSystem<T>::bubbleSort() {
+    cout << "Sorting using bubble Sort..." << endl; 
+    int count = 0; 
     for(int i = size-1; i >= 0; i--)
     {
+        bool hasChanged = false; 
         for(int j = 0; j < i; j++)
         {
             if(data[j] > data[j+1])
+            {
                 swap(data[j],data[j+1]); 
+                hasChanged = true; 
+            }
+        }
+        if(hasChanged)
+        {
+            count++; 
+            cout << "interation " << count << ": "; 
+            displayData(); 
         }
     }
 }
 
 template <typename T>
 void SortingSystem<T>::shellSort() {
+    cout << "Sorting using shell Sort..." << endl; 
     int i, j, gab; 
     T temp; 
+    int count = 0; 
     for(gab = size / 2; gab >= 1; gab /= 2)
     {
+        cout << "gab = " << gab << endl; 
         for(i = gab; i < size; i++)
         {
+            bool hasChanged = false; 
             temp = data[i]; 
             for(j = i; j >= gab && data[j-gab] > temp; j -= gab)
             {
-                data[j] = data[j-gab]; 
+                data[j] = data[j-gab];
+                hasChanged = true;  
             }
             data[j] = temp; 
+            if(hasChanged)
+            {
+                count++; 
+                cout << "iteration " << count << ": "; 
+                displayData(); 
+            }
         }
     }
 }
@@ -177,12 +221,13 @@ void SortingSystem<T>::mergeSort(int left, int right) {
         return; 
     int middle = (left + right) / 2; 
     mergeSort(left, middle); 
-    mergeSort(middle+1, right); 
+    mergeSort(middle+1, right);
     merge(left, middle, right); 
 }
 
 template <typename T>
 void SortingSystem<T>::mergeSortWrapper() {
+    cout << "Sorting using merge Sort..." << endl; 
     mergeSort(0, size - 1);
 }
 
@@ -191,6 +236,7 @@ void SortingSystem<T>::merge(int left, int middle, int right) {
     T* sorted = new T[right-left+1]; 
     int index = 0; 
     int i = left, j = middle+1; 
+    static int count = 0; 
     while(i <= middle && j <= right)
     {
         if(data[i] > data[j])
@@ -220,6 +266,9 @@ void SortingSystem<T>::merge(int left, int middle, int right) {
         data[index] = sorted[k]; 
 
     delete[] sorted; 
+    count++; 
+    cout << "iteration " << count << ": ";
+    displayData(); 
 }
 
 template <typename T>
@@ -233,6 +282,7 @@ void SortingSystem<T>::quickSort(int left, int right) {
 
 template <typename T>
 void SortingSystem<T>::quickSortWrapper() {
+    cout << "Sorting using quick Sort..." << endl; 
     quickSort(0, size - 1);
 }
 
@@ -256,13 +306,44 @@ int SortingSystem<T>::partition(int low, int high) {
         }
     } 
     swap(data[i], data[low]); 
+    cout << "the pivot is : " << data[i] << endl; 
+    cout << "the data :"; 
+    displayData(); 
     return i; 
 }
 
-template <typename T>
-void SortingSystem<T>::countSort() {
-    
+
+
+template <>
+void SortingSystem<int>::countSort() {
+    int biggest_element = this->data[0];
+    for (int i = 1; i < this->size; i++) {
+        if (this->data[i] > biggest_element) {
+            biggest_element = this->data[i];
+        }
+    }
+
+    auto *count_array = new int[biggest_element + 1]();
+    auto *output_array = new int[this->size];
+
+    for (int i = 0; i < this->size; i++) {
+        count_array[this->data[i]]++;
+    }
+
+    for (int i = 1; i <= biggest_element; i++) {
+        count_array[i] += count_array[i - 1];
+    }
+
+    for (int i = this->size - 1; i >= 0; i--) {
+        int pos = --count_array[this->data[i]];
+        output_array[pos] = this->data[i];
+    }
+
+    delete[] count_array;
+    delete[] this->data;
+    this->data = output_array;
 }
+
 
 template <typename T>
 void SortingSystem<T>::radixSort() {
@@ -351,7 +432,7 @@ int main()
         }
         cout << "what is the type of the data you want to sort ?" << endl; 
         cout << "1-int" << endl; 
-        cout << "2-float" << endl; 
+        cout << "2-float or double" << endl; 
         cout << "3-character" << endl; 
         cout << "4-string" << endl; 
         cout << "please enter you choice : "; 
