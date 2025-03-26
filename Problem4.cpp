@@ -2,6 +2,7 @@
 #include <chrono>
 #include <random>
 #include <algorithm>
+#include <fstream>
 using namespace std;
 using namespace chrono; 
 
@@ -71,9 +72,37 @@ void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
 
 template <typename T>
 void SortingSystem<T>::showMenu() {
-    cout << "now please enter tha data that you want to sort : ";
-    for(int i = 0; i < size; i++) {
-        cin >> data[i];
+    cout << "do you want to input the data or use the testcases file that already exists ? \n"; 
+    cout << "1-enter the data manually " << endl; 
+    cout << "2-use the testcases file" << endl;
+    cout << "enter your choice : "; 
+    int inputChoice; 
+    cin >> inputChoice; 
+    while(inputChoice < 1 || inputChoice > 2 || cin.fail())
+    {
+        cin.ignore(); 
+        cout << "please enter a valid choice !!!"; 
+        cin >> inputChoice; 
+    }
+    if(inputChoice == 1)
+    {
+        // the data is entered from the user
+        cout << "now please enter tha data that you want to sort : ";
+        for(int i = 0; i < size; i++) {
+            cin >> data[i];
+        }
+    }
+    else if (inputChoice == 2)
+    {
+        // the data is entered from a test case file 
+        ifstream testcases("problem4_testcases.txt"); 
+        if (!testcases) {
+            std::cerr << "Error opening file!" << std::endl;
+        }
+        int index = 0; 
+        while (testcases >> data[index] && index < size) { 
+            index++;
+        }
     }
     cout << "please enter the number of the sorting algorithm you want to use" << endl;
     cout << "1) Insertion Sort" << endl;
@@ -314,34 +343,37 @@ int SortingSystem<T>::partition(int low, int high) {
 
 
 
-template <>
-void SortingSystem<int>::countSort() {
-    int biggest_element = this->data[0];
-    for (int i = 1; i < this->size; i++) {
-        if (this->data[i] > biggest_element) {
-            biggest_element = this->data[i];
-        }
-    }
+template <typename T>
+void SortingSystem<T>::countSort() {
+    // if constexpr (!is_same<T, int>::value) {
+    //     return;
+    // }
+    // int biggest_element = this->data[0];
+    // for (int i = 1; i < this->size; i++) {
+    //     if (this->data[i] > biggest_element) {
+    //         biggest_element = this->data[i];
+    //     }
+    // }
 
-    auto *count_array = new int[biggest_element + 1]();
-    auto *output_array = new int[this->size];
+    // auto *count_array = new int[biggest_element + 1]();
+    // auto *output_array = new int[this->size];
 
-    for (int i = 0; i < this->size; i++) {
-        count_array[this->data[i]]++;
-    }
+    // for (int i = 0; i < this->size; i++) {
+    //     count_array[this->data[i]]++;
+    // }
 
-    for (int i = 1; i <= biggest_element; i++) {
-        count_array[i] += count_array[i - 1];
-    }
+    // for (int i = 1; i <= biggest_element; i++) {
+    //     count_array[i] += count_array[i - 1];
+    // }
 
-    for (int i = this->size - 1; i >= 0; i--) {
-        int pos = --count_array[this->data[i]];
-        output_array[pos] = this->data[i];
-    }
+    // for (int i = this->size - 1; i >= 0; i--) {
+    //     int pos = --count_array[this->data[i]];
+    //     output_array[pos] = this->data[i];
+    // }
 
-    delete[] count_array;
-    delete[] this->data;
-    this->data = output_array;
+    // delete[] count_array;
+    // delete[] this->data;
+    // this->data = output_array;
 }
 
 
