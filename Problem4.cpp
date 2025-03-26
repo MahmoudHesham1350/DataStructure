@@ -394,7 +394,7 @@ void SortingSystem<T>::countSort() {
 template <typename T>
 void SortingSystem<T>::radixSort(){
     if constexpr (!std::is_same_v<T, int>) {
-        throw std::invalid_argument("Count Sort is only applicable for integer data");
+        throw std::invalid_argument("Radix Sort is only applicable for integer data");
     }
     else {
     //get the largest num
