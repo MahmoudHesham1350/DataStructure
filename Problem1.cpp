@@ -315,10 +315,60 @@ void menu(IftarManager& manager){
     }
 }
 
+void test_case(IftarManager& manager) {
+    // Add guests
+    manager.add_guest("Aisha", "aisha@gmail.com", "2025-03-15");
+    manager.add_guest("Omar", "omar@gmail.com", "2025-03-18");
+    manager.add_guest("Zainab", "zainab@gmail.com", "2025-03-20");
+    manager.add_guest("Mohammed", "mohammed@gmail.com", "2025-03-16");
+    manager.add_guest("Fatima", "fatima@gmail.com", "2025-03-15");
+    manager.add_guest("Ahmad", "ahmad@gmail.com", "2025-03-17");
+    manager.add_guest("Sara", "sara@gmail.com", "2025-03-19");
+    manager.add_guest("Hassan", "hassan@gmail.com", "2025-03-15");
+    manager.add_guest("Mariam", "mariam@gmail.com", "2025-03-16");
+    manager.add_guest("Yusuf", "yusuf@gmail.com", "2025-03-18");
+
+    cout << "\n=== Initial Guest List ===\n";
+    manager.display_all_guests();
+
+    // Update some invitation dates
+    cout << "\n=== Updating Invitation Dates ===\n";
+    manager.update_guest_invitation("Omar", "2025-03-15");
+    manager.update_guest_invitation("Sara", "2025-03-16");
+    manager.update_guest_invitation("Yusuf", "2025-03-15");
+
+    cout << "\n=== Updated Guest List ===\n";
+    manager.display_all_guests();
+
+    // Test sorting
+    cout << "\n=== Sorting Guest List by Date ===\n";
+    manager.sort_guest_list();
+    manager.display_all_guests();
+
+    // Send reminders for specific dates
+    cout << "\n=== Sending Reminders for March 15 ===\n";
+    manager.send_reminder("2025-03-15");
+    
+    cout << "\n=== Sending Reminders for March 16 ===\n";
+    manager.send_reminder("2025-03-16");
+
+    // Remove some guests
+    cout << "\n=== Removing Guests ===\n";
+    manager.Remove("Ahmad");
+    manager.Remove("Mariam");
+
+    cout << "\n=== Final Guest List ===\n";
+    manager.display_all_guests();
+    
+    cout << "\n=== Total Number of Guests ===\n";
+    cout << "Number of guests: " << manager.get_no_guests() << endl;
+}
+
 int main() {
-    string fileName = "";
     IftarManager manager;
     
+    /*
+    string fileName = "";
     cout << "Insert file name with extension .txt : \n--> ";
     cin >> fileName;
     ifstream inFile(fileName);
@@ -334,5 +384,13 @@ int main() {
         cout << "Wrong file name : " << fileName << "\nTry again at another time :)\n";
         return 0;
     }
+    */
+
+    // Run test cases
+    test_case(manager);
+
+    // Start interactive menu
     menu(manager);
+    
+    return 0;
 }
