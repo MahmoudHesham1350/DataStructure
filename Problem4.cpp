@@ -453,7 +453,12 @@ void SortingSystem<T>::bucketSort() {
 
     int CountBucket[10] = {0};
 
-    T maxValue = *max_element(data, data + this->size);
+    T maxValue = this->data[0];
+        for (int i = 1; i < this->size; i++) {
+            if (this->data[i] > maxValue) {
+                maxValue = this->data[i];
+            }
+        }
 
     for (int i = 0; i < this->size; i++) {
     int bucketIndex = 0;
