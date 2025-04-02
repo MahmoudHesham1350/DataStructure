@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 using namespace std;
 
 // Node class for linked list
@@ -129,7 +130,23 @@ public:
     };
 };
 
+// Function to clear input buffer
+void clearInputBuffer() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
 
+// Function to display the menu
+void displayMenu() {
+    cout << "\n===== Sorted Linked List Menu =====\n";
+    cout << "1. Insert a value\n";
+    cout << "2. Remove a value at index\n";
+    cout << "3. Display the list\n";
+    cout << "4. Get value at index\n";
+    cout << "5. Run test cases\n";
+    cout << "6. Exit\n";
+    cout << "Enter your choice: ";
+}
 
 void test_case_1(){
     SortedLinkedList<int> list;
@@ -177,10 +194,65 @@ void test_case_3() {
     cout << list << endl; // Output: [6, 6]
 }
 
+// Function to handle the menu
+void handleMenu(SortedLinkedList<int>& list) {
+    int choice;
+    int value, index;
+    
+    do {
+        displayMenu();
+        cin >> choice;
+        clearInputBuffer();
+        
+        switch (choice) {
+            case 1: // Insert a value
+                cout << "Enter a value to insert: ";
+                cin >> value;
+                list.insert(value);
+                cout << "Value inserted successfully!\n";
+                break;
+                
+            case 2: // Remove a value at index
+                cout << "Enter the index to remove: ";
+                cin >> index;
+                list.remove(index);
+                break;
+                
+            case 3: // Display the list
+                cout << "Current list: " << list << endl;
+                break;
+                
+            case 4: // Get value at index
+                cout << "Enter the index: ";
+                cin >> index;
+                try {
+                    cout << "Value at index " << index << ": " << list[index] << endl;
+                } catch (const std::out_of_range& e) {
+                    cout << "Error: " << e.what() << endl;
+                }
+                break;
+                
+            case 5: // Run test cases
+                cout << "\nRunning test cases...\n";
+                test_case_1();
+                test_case_2();
+                test_case_3();
+                break;
+                
+            case 6: // Exit
+                cout << "Exiting program. Goodbye!\n";
+                break;
+                
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 6);
+}
+
+
 
 int main() {
-    test_case_1();
-    test_case_2();
-    test_case_3();
+    SortedLinkedList<int> list;
+    handleMenu(list);
     return 0;
 }

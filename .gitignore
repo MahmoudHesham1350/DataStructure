@@ -7,6 +7,13 @@
 *.out
 *.app
 
+# linux Executables
+Problem1
+Problem2
+Problem3
+Problem4
+Problem5 
+
 # VSCode
 .vscode/
 .vs/
