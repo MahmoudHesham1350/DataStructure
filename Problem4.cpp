@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <fstream>
 using namespace std;
-using namespace chrono;
 
 int inputChoice;
 int take_choice(int const higher_bound, int const lower_bound = 0) {
@@ -87,11 +86,22 @@ void SortingSystem<T>::displayData() {
 template <typename T>
 void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
 {
-    auto startTime = high_resolution_clock::now(); 
-    (this->*sortFunc)(); 
-    auto endTime = high_resolution_clock::now(); 
-    duration<double> duration = endTime - startTime; 
-    cout << "The sorting time was : " << duration.count() << " Seconds." << endl; 
+    using namespace std::chrono;
+
+    const int runs = 3;
+    double total_time = 0;
+
+    for(int i = 0; i < runs; i++) {
+        auto startTime = high_resolution_clock::now();
+        (this->*sortFunc)();
+        auto endTime = high_resolution_clock::now();
+        
+        // Use nanoseconds for more precision
+        auto duration = duration_cast<nanoseconds>(endTime - startTime);
+        total_time += duration.count() * 1e-9; // Convert to seconds
+    }
+
+    cout << "Average sorting time: " << (total_time / runs) << " seconds" << endl;
 }
 
 template <typename T>
@@ -524,7 +534,7 @@ int main(){
     cout << "This program allows you to sort data using various sorting algorithms." << endl;
     while(true){
         cout << "What do you want to do ?" << endl;
-        cout << "1) Sort some elments" << endl;
+        cout << "1) Sort some elements" << endl;
         cout << "2) Exit program" << endl;
         int exitChoice = take_choice(2, 1);
         if(exitChoice == 2){
@@ -532,7 +542,7 @@ int main(){
             break;
         }
 
-        cout << "do you want to input the data or use the testcases file that already exists ? \n"; 
+    cout << "do you want to input the data or use the testcases file that already exists ? \n"; 
     cout << "1) Enter the data manually " << endl;
     cout << "2) Use the testcases file" << endl;
     inputChoice = take_choice(2, 1);
