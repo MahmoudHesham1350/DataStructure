@@ -375,10 +375,24 @@ void SortingSystem<T>::countSort() {
         for (int i = 0; i < this->size; i++) {
             ++count_array[this->data[i]];
         }
+        
+        cout << "count array : [";
+        for (int i = 0; i <= biggest_element; i++) {
+            cout << count_array[i];
+            if (i < biggest_element) cout << ", ";
+        }
+        cout << "]" << endl;
 
         for (int i = 1; i <= biggest_element; i++) {
             count_array[i] += count_array[i - 1];
         }
+
+        cout << "cumulative count array : [";
+        for (int i = 0; i <= biggest_element; i++) {
+            cout << count_array[i];
+            if (i < biggest_element) cout << ", ";
+        }
+        cout << "]" << endl;
 
         for (int i = this->size - 1; i >= 0; --i) {
             const int pos = --count_array[this->data[i]];
