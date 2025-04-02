@@ -6,6 +6,7 @@
 using namespace std;
 
 int inputChoice;
+ifstream testcases; 
 int take_choice(int const higher_bound, int const lower_bound = 0) {
     int choice;
     bool valid_input = false;
@@ -546,9 +547,46 @@ int main(){
     cout << "1) Enter the data manually " << endl;
     cout << "2) Use the testcases file" << endl;
     inputChoice = take_choice(2, 1);
-    ifstream testcases("problem4_testcases.txt");
-    if (!testcases) {
-        cerr << "Error opening file!" << endl;
+    if(inputChoice == 2)
+    {
+        cout << "choose the test case file you want to use " << endl; 
+        cout << "1) normal test case file (numbers from 1 - 100)" << endl; 
+        cout << "2) random test case file (random 100 number)" << endl; 
+        cout << "3) sorted test case file (sorted 100 number)" << endl; 
+        cout << "4) reverse test case file (100 number sorted in reverse)" << endl; 
+        cout << "5) small test case file (20 number)" << endl; 
+        cout << "6) large test case file (200 number)" << endl; 
+        cout << "7) duplicated test case file (100 number with repeated numbers)" << endl; 
+        int fileChoice = take_choice(7,1);
+        switch (fileChoice)
+        {
+        case 1:
+            testcases.open("problem4_testcases.txt"); 
+            break;
+        case 2:
+            testcases.open("problem4_testcases_random.txt"); 
+            break;
+        case 3:
+            testcases.open("problem4_testcases_sorted.txt"); 
+            break;
+        case 4:
+            testcases.open("problem4_testcase_reverse.txt"); 
+            break;
+        case 5:
+            testcases.open("problem4_testcase_small.txt"); 
+            break;
+        case 6:
+            testcases.open("problem4_testcase_large.txt"); 
+            break;
+        case 7:
+            testcases.open("problem4_testcase_duplicates.txt"); 
+            break;
+        default:
+            break;
+        } 
+        if (!testcases) {
+            cerr << "Error opening file!" << endl;
+        }
     }
 
 
