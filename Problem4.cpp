@@ -6,6 +6,7 @@
 using namespace std;
 using namespace chrono;
 
+int inputChoice;
 int take_choice(int const higher_bound, int const lower_bound = 0) {
     int choice;
     bool valid_input = false;
@@ -95,11 +96,6 @@ void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
 
 template <typename T>
 void SortingSystem<T>::showMenu() {
-    cout << "do you want to input the data or use the testcases file that already exists ? \n"; 
-    cout << "1) Enter the data manually " << endl;
-    cout << "2) Use the testcases file" << endl;
-    int const inputChoice = take_choice(2, 1);
-
     switch (inputChoice) {
         case 1:{
             cout << "now please enter tha data that you want to sort : ";
@@ -111,8 +107,9 @@ void SortingSystem<T>::showMenu() {
         case 2:{
             ifstream testcases("problem4_testcases.txt");
             if (!testcases) {
-                std::cerr << "Error opening file!" << std::endl;
+                cerr << "Error opening file!" << endl;
             }
+            testcases.ignore(1000, '\n');
             int index = 0;
             while (testcases >> data[index] && index < size) {
                 index++;
@@ -146,7 +143,7 @@ void SortingSystem<T>::showMenu() {
             case 8: measureSortTime(&SortingSystem::radixSort); break;
             case 9: measureSortTime(&SortingSystem::bucketSort); break;
             default:
-                throw std::invalid_argument("Invalid choice.");
+                throw invalid_argument("Invalid choice.");
         }
         displayData();
     } catch (exception &e) {
@@ -358,8 +355,8 @@ int SortingSystem<T>::partition(int low, int high) {
 
 template <typename T>
 void SortingSystem<T>::countSort() {
-    if constexpr (!std::is_same_v<T, int>) {
-        throw std::invalid_argument("Count Sort is only applicable for integer data");
+    if constexpr (!is_same_v<T, int>) {
+        throw invalid_argument("Count Sort is only applicable for integer data");
     }
     else {
         int biggest_element = this->data[0];
@@ -407,8 +404,8 @@ void SortingSystem<T>::countSort() {
 
 template <typename T>
 void SortingSystem<T>::radixSort(){
-    if constexpr (!std::is_same_v<T, int>) {
-        throw std::invalid_argument("Radix Sort is only applicable for integer data");
+    if constexpr (!is_same_v<T, int>) {
+        throw invalid_argument("Radix Sort is only applicable for integer data");
     }
     else {
     //get the largest num
@@ -535,16 +532,49 @@ int main(){
             break;
         }
 
+        cout << "do you want to input the data or use the testcases file that already exists ? \n"; 
+    cout << "1) Enter the data manually " << endl;
+    cout << "2) Use the testcases file" << endl;
+    inputChoice = take_choice(2, 1);
+    ifstream testcases("problem4_testcases.txt");
+    if (!testcases) {
+        cerr << "Error opening file!" << endl;
+    }
+
+
         cout << "Select the type of data you want to sort:" << endl;
         cout << "  1) Integer" << endl;
         cout << "  2) Float" << endl;
         cout << "  3) Char" << endl;
         cout << "  4) String" << endl << endl;
         cout << "Enter your choice: ";
-
-        int const dataType = take_choice(4);
+        int dataType;
+        if(inputChoice == 2)
+        {
+            streambuf* originalCinBuffer = cin.rdbuf(); // Save original buffer
+            cin.rdbuf(testcases.rdbuf());
+            cin >> dataType; 
+            cout << dataType; 
+            cin.rdbuf(originalCinBuffer); 
+        }
+        else 
+        {
+            dataType = take_choice(4);
+        }
         cout << "\nSpecify the number of elements to sort: ";
-        int const dataSize = take_choice(999999999);
+        int dataSize;
+        if(inputChoice == 2)
+        {
+            streambuf* originalCinBuffer = cin.rdbuf(); // Save original buffer
+            cin.rdbuf(testcases.rdbuf());
+            cin >> dataSize; 
+            cout << dataSize << endl; 
+            cin.rdbuf(originalCinBuffer); 
+        }
+        else 
+        {
+            dataSize = take_choice(999999999);
+        }
 
         switch(dataType) {
             case 1: {
