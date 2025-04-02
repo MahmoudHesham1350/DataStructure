@@ -91,10 +91,20 @@ void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)())
 
     const int runs = 3;
     double total_time = 0;
+    bool first_run = true;
 
     for(int i = 0; i < runs; i++) {
         auto startTime = high_resolution_clock::now();
-        (this->*sortFunc)();
+        if (first_run) {
+            (this->*sortFunc)();
+            first_run = false;
+        } else {
+            // Disable cout temporarily for subsequent runs
+            streambuf* original = cout.rdbuf();
+            cout.rdbuf(nullptr);
+            (this->*sortFunc)();
+            cout.rdbuf(original);
+        }
         auto endTime = high_resolution_clock::now();
         
         // Use nanoseconds for more precision
@@ -438,11 +448,24 @@ void SortingSystem<T>::radixSort(){
             countArray[(data[i] / exp) % 10]++;
         }
 
+        cout << "count array : [";
+        for (int i = 0; i < 10; i++) {
+            cout << countArray[i];
+            if (i < 9) cout << ", ";
+        }
+        cout << "]" << endl;
+
         //We'll convert it to a "cumulative" count array that records the position of a number's first occurrence in the sorted digits array according to its current decimal place
         for (int i = 1; i < 10; i++)
         {
             countArray[i] += countArray[i - 1];
         }
+        cout << "cumulative count array : [";
+        for (int i = 0; i < 10; i++) {
+            cout << countArray[i];
+            if (i < 9) cout << ", ";
+        }
+        cout << "]" << endl;
         int* sortedArray = new int[size];
         //We'll sort the numbers in this sorted order in the sorted array according to the correct placement of their current decimal place
         for (int i = size - 1; i >= 0; i--)
