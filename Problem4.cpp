@@ -116,10 +116,6 @@ void SortingSystem<T>::showMenu() {
         break;
         }
         case 2:{
-            ifstream testcases("problem4_testcases.txt");
-            if (!testcases) {
-                cerr << "Error opening file!" << endl;
-            }
             testcases.ignore(1000, '\n');
             int index = 0;
             while (testcases >> data[index] && index < size) {
@@ -139,7 +135,7 @@ void SortingSystem<T>::showMenu() {
     cout << "7) Count Sort" << endl;
     cout << "8) Radix Sort" << endl;
     cout << "9) Bucket Sort" << endl;
-    int const choice = take_choice(9);
+    int const choice = take_choice(9,1);
     cout << "main data is : ";
     displayData();
     try {
