@@ -1,6 +1,15 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
-
+/*A polynomial object that contains an array that saves its coefficients, an int array implemented suing pointers
+ Attributes:
+ Polynomial order-> determines the max # of coefficients
+ int array-> contains its coefficients
+ Methods:
+ Display-> outputs each coefficient * its corresponding power of x (the x term vanishes if the coefficient's order is 0)
+ Calculate sum-> takes another polynomial as an input, creates a result poly., adds the coefficients, and then returns the result
+ Calculate differnce-> same idea
+ */
 class Polynomial
 {
     int order;
@@ -55,7 +64,7 @@ public:
                 result += to_string(abs(coefficients[i]));
 
             }
-            //If this is the linear term
+                //If this is the linear term
             else if (i == 2)
             {
                 //Only add the coefficient if it isn't either 1 or -1
@@ -67,7 +76,7 @@ public:
                 result += "x";
             }
             else
-            //For an arbitrary term
+                //For an arbitrary term
             {
                 //Only add the coefficient if it isn't 1 or -1
                 if(!(coefficients[i] == 1 || coefficients[i] == -1))
@@ -121,7 +130,7 @@ public:
                 }
             }
         }
-        //else, it would be of the same order as the polynomial with the highest order
+            //else, it would be of the same order as the polynomial with the highest order
         else
         {
             resultOrder = max(this->order, subtrahend.order);
@@ -155,9 +164,22 @@ public:
             }
         }
     }
-    void setCoefficient(int coefficient, int index) //sets a passed number and an index as the coefficient of the polynomial at the given index
+    void setCoefficient(int coefficient, int index) //sets a passed number as some coefficient of the polynomial at a given index
     {
         coefficients[index] = coefficient;
+    }
+    void setAllCoefficients(ifstream &file) //sets a passed number as some coefficient of the polynomial at a given index
+    {
+        int coeff;
+        for(int i=0; i<order+2;i++)
+        {
+            if(!(file >> coeff)) //if no number was read from the file and we still didn't input all the coefficients
+            {
+                cout << "You need to input more coefficients"<<endl;
+                break;
+            }
+            setCoefficient(coeff, i);
+        }
     }
     ~Polynomial()
     {
@@ -165,28 +187,73 @@ public:
         coefficients=0;
     }
 };
+
 int main()
 {
-    int firstOrder;
-    cout<<"Order of first polynomial: "; cin>>firstOrder;
+    cout << "The following are test cases for the polynomial class (assuming the order is 3): "<<endl<<endl;
+    ifstream testFile("testFile.txt");
+    if(!testFile)
+    {
+        cout << "Error: something wrong occured while trying to open the test cases file" << endl;
+    }
+    else
+    {
+
+        Polynomial test(3);
+        //initiate all the tests
+        //All negative coefficients
+        cout << "In case the input had all negative coefficients; "<<endl;
+        test.setAllCoefficients(testFile);
+        cout<<"The polynomial would be: "<<endl;
+        cout<<test.display()<<endl<<endl;
+
+        //All positive coefficients
+        cout << "In case the input had all positive coefficients; "<<endl;
+        test.setAllCoefficients(testFile);
+        cout<<"The polynomial would be: "<<endl;
+        cout<<test.display()<<endl<<endl;
+
+        //Some zero coefficients
+        cout << "In case the input had some zero coefficients; "<<endl;
+        test.setAllCoefficients(testFile);
+        cout<<"The polynomial would be: "<<endl;
+        cout<<test.display()<<endl<<endl;
+
+        //All the coefficients were 1
+        cout << "In case the input had coefficients that were all 1; "<<endl;
+        test.setAllCoefficients(testFile);
+        cout<<"The polynomial would be: "<<endl;
+        cout<<test.display()<<endl<<endl;
+
+        Polynomial test2(3);
+    }
+    cout << "We'll now perform all the operations there is on the 2 polynomials that were constructed by the input you provided in the \"inputFile.txt\" file"<<endl<<endl;
+
+    ifstream inputFile("inputFile.txt");
+    int firstOrder; inputFile >> firstOrder;
+    cout<<"Order of first polynomial: "<<firstOrder<<endl;
     Polynomial p1(firstOrder);
     cout<<"Enter polynomial: ";
     int coeff;
     for(int i=0; i<firstOrder+2; i++)
     {
-        cin>>coeff;
+        inputFile>>coeff;
         p1.setCoefficient(coeff, i);
+        cout<<coeff<< " ";
     }
+    cout<<endl<<endl;
 
-    int secondOrder;
-    cout<<"Order of second polynomial: "; cin>>secondOrder;
+    int secondOrder; inputFile >> secondOrder;
+    cout<<"Order of second polynomial: "<<secondOrder<<endl;
     Polynomial p2(secondOrder);
     cout<<"Enter polynomial: ";
     for(int i=0; i<secondOrder+2; i++)
     {
-        cin>>coeff;
+        inputFile>>coeff;
         p2.setCoefficient(coeff, i);
+        cout<<coeff<< " ";
     }
+    cout<<endl<<endl;
 
     cout<< "First Polynomial: " << p1.display() <<endl;
     cout<< "Second Polynomial: " << p2.display() <<endl;
