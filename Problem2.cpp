@@ -129,7 +129,7 @@ public:
         }
 
         Polynomial result(resultOrder);
-        //Use the same logic used with the add method
+        //The same logic used with the add method
         for(int i = 0; i < resultOrder+2; i++)
         {
             int coeff1 = (this->order+1 < i) ? 0 : this->coefficients[i];
@@ -160,7 +160,7 @@ public:
     {
         coefficients[index] = coefficient;
     }
-    void setAllCoefficients(ifstream &file) //sets a passed number as some coefficient of the polynomial at a given index
+    void setAllCoefficients(ifstream &file) //sets all the coefficients according to a passed file
     {
         int coeff;
         for(int i=0; i<order+2;i++)
@@ -183,7 +183,7 @@ public:
 int main()
 {
     cout << "The following are test cases for the polynomial class (assuming the order is 3): "<<endl<<endl;
-    ifstream testFile("testFile.txt");
+    ifstream testFile("C:/Users/Asser/CLionProjects/DSAssignment2/testFile.txt");
     if(!testFile)
     {
         cout << "Error: something wrong occured while trying to open the test cases file" << endl;
@@ -221,7 +221,7 @@ int main()
     }
     cout << "We'll now perform all the operations there is on the 2 polynomials that were constructed by the input you provided in the \"inputFile.txt\" file"<<endl<<endl;
 
-    ifstream inputFile("inputFile.txt");
+    ifstream inputFile("C:/Users/Asser/CLionProjects/DSAssignment2/inputFile.txt");
     int firstOrder; inputFile >> firstOrder;
     cout<<"Order of first polynomial: "<<firstOrder<<endl;
     Polynomial p1(firstOrder);
@@ -250,6 +250,6 @@ int main()
     cout<< "First Polynomial: " << p1.display() <<endl;
     cout<< "Second Polynomial: " << p2.display() <<endl;
     cout<< "Sum of polynomials: " << (p1.add(p2)).display() <<endl;
-    cout<< "Difference of polynomials: " << (p1.subtract(p2)).display() <<endl;
+    cout<< "Difference of polynomials: " << (p2.subtract(p1)).display() <<endl;
     return 0;
 }
